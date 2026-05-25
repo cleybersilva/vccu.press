@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCCU Press</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        #root {
+            width: 100%;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        header img {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        
+        .content {
+            background: white;
+            padding: 40px;
+            margin: 30px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        
+        .content h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .content p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .content ul, .content ol {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .content li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+        }
+        
+        footer p {
+            opacity: 0.8;
+        }
+        
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .card p {
+            color: #666;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        
+        const LOGO = "data:image/jpeg;base64,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";
+        
+        function VccuPressApp() {
+            const [activeSection, setActiveSection] = useState('home');
+            
+            return (
+                <div>
+                    <header>
+                        <img src={LOGO} alt="VCCU Logo" />
+                        <h1>VCCU Press</h1>
+                        <p>Plataforma de Publicação e Comunicação</p>
+                    </header>
+                    
+                    <div className="container">
+                        <div className="content">
+                            <h2>Bem-vindo ao VCCU Press</h2>
+                            <p>
+                                O VCCU Press é uma plataforma moderna e intuitiva desenvolvida para facilitar a publicação, 
+                                distribuição e gerenciamento de conteúdo de comunicação. Com recursos avançados e uma interface 
+                                amigável, você pode criar, editar e publicar conteúdo de forma rápida e eficiente.
+                            </p>
+                            
+                            <div className="grid">
+                                <div className="card">
+                                    <h3>📝 Edição Simples</h3>
+                                    <p>Interface intuitiva para criar e editar conteúdo sem necessidade de conhecimentos técnicos avançados.</p>
+                                </div>
+                                <div className="card">
+                                    <h3>🚀 Publicação Rápida</h3>
+                                    <p>Publique seu conteúdo em segundos com um clique. Alcance seu público instantaneamente.</p>
+                                </div>
+                                <div className="card">
+                                    <h3>📊 Análise de Dados</h3>
+                                    <p>Acompanhe métricas detalhadas sobre o desempenho do seu conteúdo em tempo real.</p>
+                                </div>
+                                <div className="card">
+                                    <h3>🔒 Segurança</h3>
+                                    <p>Seus dados estão protegidos com criptografia de ponta e conformidade com padrões internacionais.</p>
+                                </div>
+                            </div>
+                            
+                            <h2 style={{marginTop: '40px'}}>Recursos Principais</h2>
+                            <ul>
+                                <li><strong>Gerenciamento de Conteúdo:</strong> Organize e categorize seu conteúdo de forma eficiente</li>
+                                <li><strong>Colaboração em Tempo Real:</strong> Trabalhe com sua equipe simultaneamente</li>
+                                <li><strong>Agendamento de Publicações:</strong> Programe quando seu conteúdo será publicado</li>
+                                <li><strong>Integração com Redes Sociais:</strong> Distribua seu conteúdo em múltiplas plataformas</li>
+                                <li><strong>Relatórios Personalizados:</strong> Gere relatórios detalhados sobre o desempenho</li>
+                            </ul>
+                            
+                            <h2 style={{marginTop: '40px'}}>Como Começar</h2>
+                            <p>
+                                Para começar a usar o VCCU Press, siga os passos abaixo:
+                            </p>
+                            <ol>
+                                <li>Crie uma conta na plataforma</li>
+                                <li>Configure seu perfil e preferências</li>
+                                <li>Crie seu primeiro conteúdo</li>
+                                <li>Publique e acompanhe o desempenho</li>
+                            </ol>
+                            
+                            <button className="button">Comece Agora</button>
+                        </div>
+                    </div>
+                    
+                    <footer>
+                        <p>&copy; 2024 VCCU Press. Todos os direitos reservados.</p>
+                        <p>Desenvolvido com ❤️ para melhorar sua comunicação</p>
+                    </footer>
+                </div>
+            );
+        }
+        
+        ReactDOM.createRoot(document.getElementById('root')).render(<VccuPressApp />);
+    </script>
+</body>
+</html>
